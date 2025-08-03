@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 import mysql_student
 from tkinter import messagebox
+import pandas as pd
+from tkinter import filedialog, messagebox
 from datetime import datetime  # 导入 datetime 模块
 import re
 current_date = datetime.now().strftime("%Y.%m.%d")
@@ -181,6 +183,7 @@ class SearchFrame(Frame):
         Button(self, text='删   除', command=self.treeviewClick).pack(side=RIGHT)
 
         Label(self, textvariable=self.status_name, fg="red").pack(side=TOP, pady=5)
+        Button(self, text='导出Excel', command=self.export_to_excel).pack(side=RIGHT, padx=5)
           #点击标题实现排序
         def treeview_sort_column1(tv, col, reverse):  # Treeview、列名、排列方式
             l = [(tv.set(k, col), k) for k in tv.get_children('')]
@@ -338,6 +341,43 @@ class SearchFrame(Frame):
              item_text = self.tree_view.item(item, "values")
              mysql_student.delete_id(item_text[0])  # 删除所选行的第一列的值
              self.show_search_data()
+
+    def export_to_excel(self):
+        # 获取当前树形视图中的所有数据
+        items = self.tree_view.get_children()
+        data = []
+        columns = ("序号", "姓名", "分类", "公司", "金额", "日期")  # 与Treeview列名对应
+        
+        for item in items:
+            values = self.tree_view.item(item, 'values')
+            data.append(values)
+        
+        if not data:
+            messagebox.showwarning("警告", "没有数据可导出")
+            return
+        
+        # 创建DataFrame
+        df = pd.DataFrame(data, columns=columns)
+        
+        # 让用户选择保存位置
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".xlsx",
+            filetypes=[("Excel文件", "*.xlsx"), ("所有文件", "*.*")],
+            title="保存为Excel文件"
+        )
+        
+        if not file_path:  # 用户取消了保存
+            return
+        
+        try:
+            # 导出到Excel
+            df.to_excel(file_path, index=False)
+            messagebox.showinfo("成功", f"数据已成功导出到:\n{file_path}")
+            import os
+            os.startfile(os.path.dirname(file_path))
+        except Exception as e:
+            messagebox.showerror("错误", f"导出失败:\n{str(e)}")
+        
  
 
 class ChangeFrame(Frame):
