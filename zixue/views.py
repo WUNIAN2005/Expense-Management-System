@@ -6,6 +6,7 @@ import pandas as pd
 from tkinter import filedialog, messagebox
 from datetime import datetime  # 导入 datetime 模块
 import re
+from decimal import Decimal
 current_date = datetime.now().strftime("%Y.%m.%d")
 allminmoney=mysql_student.get_min_money()
 allmaxmoney=mysql_student.get_max_money()
@@ -89,7 +90,7 @@ class InsertFrame(Frame):
             self.insert_source = self.source.get()
 
         if not self.money.get():
-            self.insert_money =float(0)
+            self.insert_money =decimal(0)
         else:
             self.insert_money = self.money.get()
 
@@ -241,7 +242,7 @@ class SearchFrame(Frame):
                 stu['money'], stu['date']
             ))
             # 累加金额（只有当金额字段存在且为数字时）
-            if 'money' in stu and isinstance(stu['money'], (int, float)):
+            if 'money' in stu and isinstance(stu['money'], (int, Decimal)):
                 total_money += stu['money']
         self.tree_color()  # 启动程序，根据奇偶行设为不同的背景颜色
         self.status_name.set(f"总金额：{total_money}")
@@ -285,8 +286,8 @@ class SearchFrame(Frame):
         # 检查输入的金额范围和日期范围是否合理
         if min_money and max_money:
             try:
-                min_money =float(min_money)
-                max_money = float(max_money)
+                min_money =decimal(min_money)
+                max_money = decimal(max_money)
                 if min_money > max_money:
                     self.status_name.set("最小金额应小于最大金额")
                     return
@@ -327,7 +328,7 @@ class SearchFrame(Frame):
             self.tree_view.insert('', 'end', values=(id, name, type, source, money, date))
             if money != 'N/A':
                 try:
-                    total_money += float(money)  # 确保 money 是整数
+                    total_money += decimal(money)  # 确保 money 是整数
                 except ValueError:
                     print(f"Warning: Invalid money value '{money}' for student {name}")
 
@@ -346,7 +347,7 @@ class SearchFrame(Frame):
         # 获取当前树形视图中的所有数据
         items = self.tree_view.get_children()
         data = []
-        columns = ("序号", "姓名", "分类", "公司", "金额", "日期")  # 与Treeview列名对应
+        columns = ("id", "name", "type", "source", "money", "date")  # 与Treeview列名对应
         
         for item in items:
             values = self.tree_view.item(item, 'values')
@@ -383,6 +384,8 @@ class SearchFrame(Frame):
 class ChangeFrame(Frame):
     def __init__(self, root):
         super().__init__(root, width=570, height=290)
+        #super().__init__(root)  # 移除 width 和 height
+        #self.pack(fill=BOTH, expand=True)  # 自适应父容器
         self.pack()
 
         self.change_student = StringVar()

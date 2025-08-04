@@ -15,16 +15,16 @@ sort_data = int(0)
 cursor = conn.cursor()
 
 # 创建数据库，若有则不创建
-cursor.execute("create database if not exists CashManagement;")
-conn.select_db("CashManagement") # 建立与数据库的连接
+cursor.execute("create database if not exists cashmanagement;")
+conn.select_db("cashmanagement") # 建立与数据库的连接
 
 # 创建学生信息表， 若有则不创建
 cursor.execute("""CREATE TABLE IF NOT EXISTS students(
-    id int,
+    id int PRIMARY KEY,
     name varchar(10),
     type int,
     source varchar(20),
-    money float,
+    money decimal(17,6),
     date varchar(20)
 );""")
  
