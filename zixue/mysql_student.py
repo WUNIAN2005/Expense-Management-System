@@ -24,7 +24,8 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS students(
     name varchar(10),
     type int,
     source varchar(20),
-    money decimal(17,6),
+    money_in decimal(17,6),
+    money_out decimal(17,6),
     date varchar(20)
 );""")
  
@@ -46,8 +47,9 @@ def all():
     sort_columns = {
         0: "id",
         1: "type",
-        2: "money",
-        3: "date"
+        2: "money_in",
+        3: "money_out",    
+        4: "date"
     }
 
     # 获取排序字段和排序顺序
@@ -62,7 +64,7 @@ def all():
     data = cursor.fetchall()
 
     # 定义字段名
-    key = ('id', 'name', 'type', 'source', 'money', 'date')
+    key = ('id', 'name', 'type', 'source', 'money_in','money_out','date')
 
     # 将查询结果转换为字典格式
     jsonList = [dict(zip(key, i)) for i in data]
@@ -101,11 +103,11 @@ data = [
 #     cursor.execute(query, stu[:6])  # 确保只传递前 6 个值
 def insert(stu):
     # 确保 stu 至少有 6 个字段
-    if len(stu) < 6:
+    if len(stu) < 7:
         raise ValueError(f"stu must have at least 6 fields, but got {len(stu)} fields: {stu}")
 
-    query = "INSERT INTO students (id, name, type, source, money, date) VALUES (%s, %s, %s, %s, %s, %s);"
-    cursor.execute(query, stu[:6])  # 确保只传递前 6 个值
+    query = "INSERT INTO students (id, name, type, source, money_in,money_out, date) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+    cursor.execute(query, stu[:7])  # 确保只传递前 6 个值
 
 #插入模拟数据
 # for stu in data:
@@ -161,7 +163,7 @@ def delete_name(user_name):
 def search_type(type):
     cursor.execute("select * from students where type = '{0}';".format(type))
     data = cursor.fetchall()
-    key = ('id', 'name', 'type', 'source', 'money', 'date')
+    key = ('id', 'name', 'type', 'source', 'money_in','money_out' 'date')
     jsonList = []
     # 通过数据得到的数据是元组类型，需要压缩成字典类型便于输出
     for i in data:
@@ -232,54 +234,145 @@ def search_money(a, b):
  
 #获取数据条数
 def get_max_id():
-    query = "SELECT MAX(id) FROM students"
+    # query = "SELECT MAX(id) FROM students"
+    query = "SELECT count(*) FROM students"
     cursor.execute(query)
     result = cursor.fetchone()
     return result[0] if result[0] else 0
 
 def get_min_money():
-    query = "SELECT MIN(money) FROM students"
+    query = "SELECT MIN(money_in+money_out) FROM students"
     cursor.execute(query)
     result = cursor.fetchone()
     return result[0] if result[0] is not None else 0
 
 def get_max_money():
-    query = "SELECT MAX(money) FROM students"
+    query = "SELECT MAX(money_in+money_out) FROM students"
     cursor.execute(query)
     result = cursor.fetchone()
-    return result[0] if result[0] is not None else 0
+#     return result[0] if result[0] is not None else 0
 def get_min_date():
     query = "SELECT MIN(date) FROM students"
     cursor.execute(query)
     result = cursor.fetchone()
     return result[0] if result[0] is not None else None
   
-def search(type_value=None, min_money=None, max_money=None, start_date=None, end_date=None):
-    query = "SELECT * FROM students WHERE 1=1"
+# def search(type_name=None,type_value=None, min_money=None, max_money=None, start_date=None, end_date=None):
+#     query = "SELECT * FROM students WHERE 1=1"
+#     params = []
+#     if type_name:
+#         query += " AND date <= %s"
+#         params.append(end_date)
+#     if type_value:
+#         query += " AND type = %s"
+#         params.append(type_value)
+#     if min_money:
+#         query += " AND money >= %s"
+#         params.append(min_money)
+#     if max_money:
+#         query += " AND money <= %s"
+#         params.append(max_money)
+#     if start_date:
+#         query += " AND date >= %s"
+#         params.append(start_date)
+#     if end_date:
+#         query += " AND date <= %s"
+#         params.append(end_date)
+    
+
+#     cursor.execute(query, params)
+#     result = cursor.fetchall()  # 返回一个包含 tuple 的列表
+#     print("Debug: Database result =", result)  # 打印数据库查询结果
+#     return result
+# def search(type_name=None, type_value=None,
+#            min_money=None, max_money=None,
+#            start_date=None, end_date=None,
+#            name=None,           # 新增：姓名查询
+#            fuzzy=True):         # 新增：是否启用模糊查询
+#     """
+#     查询 students 表
+#     :param fuzzy: True 表示模糊匹配姓名，False 表示精确匹配
+#     """
+#     query = "SELECT * FROM students WHERE 1=1"
+#     params = []
+
+#     if name:
+#         if fuzzy:
+#             query += " AND name LIKE %s"
+#             params.append(f"%{name}%")
+#         else:
+#             query += " AND name = %s"
+#             params.append(name)
+
+#     if type_value:
+#         query += " AND type = %s"
+#         params.append(type_value)
+#     if min_money:
+#         query += " AND money >= %s"
+#         params.append(min_money)
+#     if max_money:
+#         query += " AND money <= %s"
+#         params.append(max_money)
+#     if start_date:
+#         query += " AND date >= %s"
+#         params.append(start_date)
+#     if end_date:
+#         query += " AND date <= %s"
+#         params.append(end_date)
+
+#     cursor.execute(query, params)
+#     result = cursor.fetchall()
+#     print("Debug: Database result =", result)
+#     return result
+@staticmethod
+def search(mode=0, name_key=None, type_value=None,
+           min_money=0, max_money=999999999,
+           start_date=None, end_date=None):
+    """
+    mode: 0全部 1收入 -1支出
+    """
+    sql = """
+        SELECT id, name, type, source,
+               COALESCE(money_in, 0)  AS money_in,
+               COALESCE(money_out, 0) AS money_out,
+               date
+        FROM students
+        WHERE 1=1
+    """
     params = []
 
+    # 姓名模糊
+    if name_key:
+        sql += " AND name LIKE %s"
+        params.append(f'%{name_key}%')
+
+    # 类型精确
     if type_value:
-        query += " AND type = %s"
+        sql += " AND type = %s"
         params.append(type_value)
-    if min_money:
-        query += " AND money >= %s"
-        params.append(min_money)
-    if max_money:
-        query += " AND money <= %s"
-        params.append(max_money)
+
+    # 收支模式
+    if mode == 1:          # 只保留收入
+        sql += " AND money_in > 0"
+    elif mode == -1:       # 只保留支出
+        sql += " AND money_out > 0"
+
+    # 金额区间（money_in + money_out）
+    sql += " AND (money_in + money_out) BETWEEN %s AND %s"
+    params.extend([min_money, max_money])
+
+    # 日期区间
     if start_date:
-        query += " AND date >= %s"
+        sql += " AND date >= %s"
         params.append(start_date)
     if end_date:
-        query += " AND date <= %s"
+        sql += " AND date <= %s"
         params.append(end_date)
 
-    cursor.execute(query, params)
-    result = cursor.fetchall()  # 返回一个包含 tuple 的列表
-    print("Debug: Database result =", result)  # 打印数据库查询结果
-    return result
-search()
+    sql += " ORDER BY id DESC"
 
+    cursor.execute(sql, params)
+    return cursor.fetchall()
 
 def update_student(student_id, new_data):
     try:

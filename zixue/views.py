@@ -8,11 +8,167 @@ from datetime import datetime  # 导入 datetime 模块
 import re
 from decimal import Decimal
 current_date = datetime.now().strftime("%Y.%m.%d")
-allminmoney=mysql_student.get_min_money()
+allminmoney_in=mysql_student.get_min_money()
 allmaxmoney=mysql_student.get_max_money()
 min_date=mysql_student.get_min_date()
 
 
+# # 实现录入页面的类
+# class InsertFrame(Frame):
+#     def __init__(self, root):
+#         super().__init__(root)
+#         self.id = StringVar()
+#         self.name = StringVar()
+#         self.type = StringVar()
+#         self.source = StringVar()
+#         self.money = StringVar()
+#         self.date = StringVar()
+       
+       
+
+#         # 打印录入是否成功信息
+#         self.status_insert = StringVar()
+#         self.insert_page()
+
+#     # 打印修输入的项目以及输入框
+#     def insert_page(self):
+#         # Label(self, text='学   号 : ').grid(row=1, column=1, pady=5)
+#         # self.entry_id = Entry(self, textvariable=self.id)
+#         # self.entry_id.grid(row=1, column=2, pady=5)
+
+#         Label(self, text='姓   名 : ').grid(row=2, column=1, pady=5)
+#         self.entry_name = Entry(self, textvariable=self.name)
+#         self.entry_name.grid(row=2, column=2, pady=5)
+
+#         Label(self, text='类 别 : ').grid(row=3, column=1, pady=5)
+#         self.entry_type = Entry(self, textvariable=self.type)
+#         self.entry_type.grid(row=3, column=2, pady=5)
+
+#         Label(self, text='公 司 : ').grid(row=4, column=1, pady=5)
+#         self.entry_source = Entry(self, textvariable=self.source)
+#         self.entry_source.grid(row=4, column=2, pady=5)
+
+#         Label(self, text='金 额 : ').grid(row=5, column=1, pady=5)
+#         self.entry_money = Entry(self, textvariable=self.money)
+#         self.entry_money.grid(row=5, column=2, pady=5)
+
+#         Label(self, text='日 期 : ').grid(row=6, column=1, pady=5)
+#         self.entry_date = Entry(self, textvariable=self.date)
+#         self.entry_date.grid(row=6, column=2, pady=5)
+
+#         Button(self, text='清空', command=self.insert_deleteValue).grid(row=7, column=1, pady=10)
+#         Button(self, text='录入', command=self.insert_data).grid(row=7, column=3, pady=10)
+
+#         # Label(self, textvariable=self.status_insert,fg='red').grid(row=8, column=2, padx=10)
+#         self.status_label = Label(self, textvariable=self.status_insert, fg='red')
+#         self.status_label.grid(row=8, column=2, padx=10)
+# class InsertFrame(Frame):
+#     def __init__(self, root):
+#         super().__init__(root)
+#         self.id = StringVar()
+#         self.name = StringVar()
+#         self.type = StringVar()
+#         self.source = StringVar()
+#         self.money_in = StringVar()
+#         self.money_out=StringVar()
+#         self.date = StringVar()
+#         self.status_insert = StringVar()
+#         self.insert_page()
+
+#     def insert_page(self):
+#         # 让 Frame 的行和列可扩展
+#         for i in range(1, 9):  # 行 1-8
+#             self.grid_rowconfigure(i, weight=1)
+#         for j in range(1, 4):  # 列 1-3
+#             self.grid_columnconfigure(j, weight=1)
+
+#         # 使用 sticky="ew" 让 Entry 控件水平填充
+#         Label(self, text='姓   名 : ').grid(row=2, column=1, pady=5, sticky="e")
+#         self.entry_name = Entry(self, textvariable=self.name)
+#         self.entry_name.grid(row=2, column=2, pady=5, sticky="ew")
+
+#         Label(self, text='类 别 : ').grid(row=3, column=1, pady=5, sticky="e")
+#         self.entry_type = Entry(self, textvariable=self.type)
+#         self.entry_type.grid(row=3, column=2, pady=5, sticky="ew")
+
+#         Label(self, text='公 司 : ').grid(row=4, column=1, pady=5, sticky="e")
+#         self.entry_source = Entry(self, textvariable=self.source)
+#         self.entry_source.grid(row=4, column=2, pady=5, sticky="ew")
+
+#         Label(self, text='金 额 : ').grid(row=5, column=1, pady=5, sticky="e")
+#         self.entry_money = Entry(self, textvariable=self.money)
+#         self.entry_money.grid(row=5, column=2, pady=5, sticky="ew")
+
+#         Label(self, text='日 期 : ').grid(row=6, column=1, pady=5, sticky="e")
+#         self.entry_date = Entry(self, textvariable=self.date)
+#         self.entry_date.grid(row=6, column=2, pady=5, sticky="ew")
+
+#         Button(self, text='清空', command=self.insert_deleteValue).grid(row=7, column=1, pady=10, sticky="e")
+#         Button(self, text='录入', command=self.insert_data).grid(row=7, column=3, pady=10, sticky="w")
+
+#         self.status_label = Label(self, textvariable=self.status_insert, fg='red')
+#         self.status_label.grid(row=8, column=2, padx=10, sticky="ew")
+
+#        # 删除输入框中的内容
+#     def insert_deleteValue(self):
+#         #self.entry_id.delete(0, END)
+#         self.entry_name.delete(0, END)
+#         self.entry_type.delete(0, END)
+#         self.entry_source.delete(0, END)
+#         self.entry_money.delete(0, END)
+#         self.entry_date.delete(0, END)
+
+  
+#     def insert_data(self):
+#         if not self.name.get():
+#             self.insert_name = 'NULL'
+#         else:
+#             self.insert_name = self.name.get()
+
+#         if not self.type.get():
+#             self.insert_type = 'NULL'
+#         else:
+#             self.insert_type = self.type.get()
+
+#         if not self.source.get():
+#             self.insert_source = 'NULL'
+#         else:
+#             self.insert_source = self.source.get()
+
+#         if not self.money.get():
+#             self.insert_money =decimal(0)
+#         else:
+#             self.insert_money = self.money.get()
+
+#         if not self.date.get():
+#             self.insert_date = current_date  # 假设 current_date 是一个全局变量
+#         else:
+#             try:
+#                 # 将输入的日期转换为 datetime 对象，并格式化为标准格式
+#                 self.insert_date = datetime.strptime(self.date.get(), "%Y.%m.%d").strftime("%Y.%m.%d")
+#             except ValueError:
+#                 # 如果用户输入的日期格式不正确，提示错误
+#                 self.status_insert.set("日期格式错误，请输入 YYYY.MM.DD 格式的日期")
+#                 return
+
+#         # 获取最大 ID 并加 1
+#         a = mysql_student.get_max_id() + 1
+#         stu = (a, self.insert_name, self.insert_type, self.insert_source,
+#             self.insert_money, self.insert_date)
+
+#         # 尝试插入数据
+#         # try:
+#         #     mysql_student.insert(stu)  # 这一部分为存在并导入信息
+#         #     self.status_insert.set("录入成功")  # 显示录入成功的信息
+#         # except Exception as e:
+#         #     self.status_insert.set(f"录入失败：{e}")  # 如果插入失败，显示错误信息
+#         try:
+#             mysql_student.insert(stu)  # 这一部分为存在并导入信息
+#             self.status_insert.set("录入成功")  # 显示录入成功的信息
+#             self.status_label.after(3000, lambda: self.status_insert.set(""))  # 3秒后清除信息
+#         except Exception as e:
+#             self.status_insert.set(f"录入失败：{e}")  # 如果插入失败，显示错误信息
+#             self.status_label.after(20000, lambda: self.status_insert.set(""))  # 3秒后清除信息
 # 实现录入页面的类
 class InsertFrame(Frame):
     def __init__(self, root):
@@ -21,7 +177,8 @@ class InsertFrame(Frame):
         self.name = StringVar()
         self.type = StringVar()
         self.source = StringVar()
-        self.money = StringVar()
+        self.money_in = StringVar()
+        self.money_out=StringVar()
         self.date = StringVar()
        
        
@@ -48,13 +205,17 @@ class InsertFrame(Frame):
         self.entry_source = Entry(self, textvariable=self.source)
         self.entry_source.grid(row=4, column=2, pady=5)
 
-        Label(self, text='金 额 : ').grid(row=5, column=1, pady=5)
-        self.entry_money = Entry(self, textvariable=self.money)
-        self.entry_money.grid(row=5, column=2, pady=5)
+        Label(self, text='收 入 金 额 : ').grid(row=5, column=1, pady=5)
+        self.entry_money_in = Entry(self, textvariable=self.money_in)
+        self.entry_money_in.grid(row=5, column=2, pady=5)
 
-        Label(self, text='日 期 : ').grid(row=6, column=1, pady=5)
+        Label(self, text='支 出 金 额 : ').grid(row=6, column=1, pady=5)
+        self.entry_money_out = Entry(self, textvariable=self.money_out)
+        self.entry_money_out.grid(row=6, column=2, pady=5)
+
+        Label(self, text='日 期 : ').grid(row=7, column=1, pady=5)
         self.entry_date = Entry(self, textvariable=self.date)
-        self.entry_date.grid(row=6, column=2, pady=5)
+        self.entry_date.grid(row=7, column=2, pady=5)
 
         Button(self, text='清空', command=self.insert_deleteValue).grid(row=7, column=1, pady=10)
         Button(self, text='录入', command=self.insert_data).grid(row=7, column=3, pady=10)
@@ -69,62 +230,109 @@ class InsertFrame(Frame):
         self.entry_name.delete(0, END)
         self.entry_type.delete(0, END)
         self.entry_source.delete(0, END)
-        self.entry_money.delete(0, END)
+        self.entry_money_in.delete(0, END)
+        self.entry_money_out.delete(0, END)
         self.entry_date.delete(0, END)
 
   
+    # def insert_data(self):
+    #     if not self.name.get():
+    #         self.insert_name = 'NULL'
+    #     else:
+    #         self.insert_name = self.name.get()
+
+    #     if not self.type.get():
+    #         self.insert_type = 'NULL'
+    #     else:
+    #         self.insert_type = self.type.get()
+
+    #     if not self.source.get():
+    #         self.insert_source = 'NULL'
+    #     else:
+    #         self.insert_source = self.source.get()
+
+    #     if not self.money.get():
+    #         self.insert_money =float(0)
+    #     else:
+    #         self.insert_money = self.money.get()
+
+    #     if not self.date.get():
+    #         self.insert_date = current_date  # 假设 current_date 是一个全局变量
+    #     else:
+    #         try:
+    #             # 将输入的日期转换为 datetime 对象，并格式化为标准格式
+    #             self.insert_date = datetime.strptime(self.date.get(), "%Y.%m.%d").strftime("%Y.%m.%d")
+    #         except ValueError:
+    #             # 如果用户输入的日期格式不正确，提示错误
+    #             self.status_insert.set("日期格式错误，请输入 YYYY.MM.DD 格式的日期")
+    #             return
+
+    #     # 获取最大 ID 并加 1
+    #     a = mysql_student.get_max_id() + 1
+    #     stu = (a, self.insert_name, self.insert_type, self.insert_source,
+    #         self.insert_money, self.insert_date)
+
+    #     # 尝试插入数据
+    #     # try:
+    #     #     mysql_student.insert(stu)  # 这一部分为存在并导入信息
+    #     #     self.status_insert.set("录入成功")  # 显示录入成功的信息
+    #     # except Exception as e:
+    #     #     self.status_insert.set(f"录入失败：{e}")  # 如果插入失败，显示错误信息
+    #     try:
+    #         mysql_student.insert(stu)  # 这一部分为存在并导入信息
+    #         self.status_insert.set("录入成功")  # 显示录入成功的信息
+    #         self.status_label.after(3000, lambda: self.status_insert.set(""))  # 3秒后清除信息
+    #     except Exception as e:
+    #         self.status_insert.set(f"录入失败：{e}")  # 如果插入失败，显示错误信息
+    #         self.status_label.after(20000, lambda: self.status_insert.set(""))  # 3秒后清除信息
+
     def insert_data(self):
-        if not self.name.get():
-            self.insert_name = 'NULL'
-        else:
-            self.insert_name = self.name.get()
+        # ---------- 基础字段 ----------
+        name   = self.name.get().strip()   or 'NULL'
+        type_  = self.type.get().strip()   or 'NULL'
+        source = self.source.get().strip() or 'NULL'
 
-        if not self.type.get():
-            self.insert_type = 'NULL'
-        else:
-            self.insert_type = self.type.get()
+        # ---------- 金额：只能填 money_in 或 money_out 中的一项 ----------
+        try:
+            money_in  = Decimal(self.money_in.get()  or 0)
+            money_out = Decimal(self.money_out.get() or 0)
+        except ValueError:
+            self.status_insert.set("金额必须是数字！")
+            return
 
-        if not self.source.get():
-            self.insert_source = 'NULL'
-        else:
-            self.insert_source = self.source.get()
+        # 业务校验：二者只能有一个大于 0
+        if money_in and money_out:
+            self.status_insert.set("收入、支出只能填一项！")
+            return
+        if not money_in and not money_out:
+            money_in = 0.0          # 默认视为 0 收入，你也可以改为 money_out = 0.0
 
-        if not self.money.get():
-            self.insert_money =decimal(0)
-        else:
-            self.insert_money = self.money.get()
-
-        if not self.date.get():
-            self.insert_date = current_date  # 假设 current_date 是一个全局变量
+        # ---------- 日期 ----------
+        date_str = self.date.get().strip()
+        if not date_str:
+            date_str = current_date           # 全局变量
         else:
             try:
-                # 将输入的日期转换为 datetime 对象，并格式化为标准格式
-                self.insert_date = datetime.strptime(self.date.get(), "%Y.%m.%d").strftime("%Y.%m.%d")
+                date_str = datetime.strptime(date_str, "%Y.%m.%d").strftime("%Y.%m.%d")
             except ValueError:
-                # 如果用户输入的日期格式不正确，提示错误
-                self.status_insert.set("日期格式错误，请输入 YYYY.MM.DD 格式的日期")
+                self.status_insert.set("日期格式错误，请输入 YYYY.MM.DD")
                 return
 
-        # 获取最大 ID 并加 1
-        a = mysql_student.get_max_id() + 1
-        stu = (a, self.insert_name, self.insert_type, self.insert_source,
-            self.insert_money, self.insert_date)
+        # ---------- 生成下一条 ID ----------
+        new_id = mysql_student.get_max_id() + 1
+        record = (new_id, name, type_, source, money_in, money_out, date_str)
 
-        # 尝试插入数据
-        # try:
-        #     mysql_student.insert(stu)  # 这一部分为存在并导入信息
-        #     self.status_insert.set("录入成功")  # 显示录入成功的信息
-        # except Exception as e:
-        #     self.status_insert.set(f"录入失败：{e}")  # 如果插入失败，显示错误信息
+        # ---------- 插入数据库 ----------
         try:
-            mysql_student.insert(stu)  # 这一部分为存在并导入信息
-            self.status_insert.set("录入成功")  # 显示录入成功的信息
-            self.status_label.after(3000, lambda: self.status_insert.set(""))  # 3秒后清除信息
+            mysql_student.insert(record)
+            self.status_insert.set("录入成功")
+            self.status_label.after(3000, lambda: self.status_insert.set(""))   # 3 秒后清除
+           # self.clear_inputs()   # 可选：清空输入框
         except Exception as e:
-            self.status_insert.set(f"录入失败：{e}")  # 如果插入失败，显示错误信息
-            self.status_label.after(20000, lambda: self.status_insert.set(""))  # 3秒后清除信息
+            self.status_insert.set(f"录入失败：{e}")
+            self.status_label.after(20000, lambda: self.status_insert.set(""))  # 20 秒后清除 
 
- 
+
 class SearchFrame(Frame):
     def __init__(self, root):
         super().__init__(root)
@@ -135,21 +343,22 @@ class SearchFrame(Frame):
 
     # 实现显示查询页面的整个大框架分布
     def show_table_search(self):
-        columns = ("id", "name", "type", "source", "money", "date")
-        columns_values = ("序号", "姓名", "分类", "公司", "金额", "日期")
+        columns = ("id", "name", "type", "source", "money_in","money_out" ,"date")
+        columns_values = ("序号", "姓名", "分类", "公司", "收入金额","支出金额" ,"日期")
         self.tree_view = ttk.Treeview(self, show = 'headings', columns = columns)
 
 
         for col in columns:
-            self.tree_view.column(col, width = 80, anchor = 'center')
+            self.tree_view.column(col, width = 10, anchor = 'center')
 
         for col, colvalue in zip(columns, columns_values):
             self.tree_view.heading(col, text = colvalue)
 
         self.tree_view.pack(fill = BOTH, expand = True)
         self.show_search_data()
-
+        self.select_entry=StringVar()
         self.type_type = StringVar()
+        self.name_entry = StringVar()
         self.min_money_entry = StringVar()  # 添加最小金额输入框的变量
         self.max_money_entry = StringVar()  # 添加最大金额输入框的变量
         self.start_date_entry = StringVar()  # 添加开始日期输入框的变量
@@ -164,9 +373,15 @@ class SearchFrame(Frame):
         # Entry(self, textvariable=self.end_date_entry,width=10).pack(side=LEFT)
         # Button(self, text='按日期查询', command=self.search_date).pack(side=LEFT)
         # 综合查询输入框和按钮
+        Label(self, text="选择模式：").pack(side=LEFT)
+        Entry(self, textvariable=self.select_entry, width=10).pack(side=LEFT) 
+        
         Label(self, text="类型：").pack(side=LEFT)
         Entry(self, textvariable=self.type_type, width=10).pack(side=LEFT)
-
+         
+        Label(self, text="姓名：").pack(side=LEFT)
+        Entry(self, textvariable=self.name_entry, width=10).pack(side=LEFT) 
+       
         Label(self, text="金额范围：").pack(side=LEFT)
         Entry(self, textvariable=self.min_money_entry, width=5).pack(side=LEFT)
         Label(self, text="-").pack(side=LEFT)
@@ -235,17 +450,17 @@ class SearchFrame(Frame):
             pass
         students = mysql_student.all() # 获取数据库中的信息并以字典形式返回
         index = -1
-        total_money = 0
+        total_money_in = 0
         for stu in students:
             self.tree_view.insert('', index + 1, values=(
                 stu['id'], stu['name'], stu['type'], stu['source'],
-                stu['money'], stu['date']
+                stu['money_in'],stu['money_out'], stu['date']
             ))
             # 累加金额（只有当金额字段存在且为数字时）
-            if 'money' in stu and isinstance(stu['money'], (int, Decimal)):
-                total_money += stu['money']
+            if 'money_in' in stu and isinstance(stu['money_in'], (int, Decimal)):
+                total_money_in += stu['money_in']
         self.tree_color()  # 启动程序，根据奇偶行设为不同的背景颜色
-        self.status_name.set(f"总金额：{total_money}")
+        self.status_name.set(f"收入：{total_money_in}") 
 
 
     def tree_color(self):  # 表格栏隔行显示不同颜色函数
@@ -261,82 +476,152 @@ class SearchFrame(Frame):
     
 
  
+    # def search(self):
+    #     # 清空树形视图中的所有内容
+    #     for item in self.tree_view.get_children():
+    #         self.tree_view.delete(item)
+
+    #     # 获取用户输入的查询条件
+    #     select_entry=select_entry.get()
+    #     type_name=self.name_entry.get()
+    #     type_value = self.type_type.get()
+    #     min_money = self.min_money_entry.get()
+    #     max_money = self.max_money_entry.get()
+    #     start_date = self.start_date_entry.get()
+    #     end_date = self.end_date_entry.get()
+
+    #     # 格式化日期输入
+    #     try:
+    #         if start_date:
+    #             start_date = datetime.strptime(start_date, "%Y.%m.%d").strftime("%Y.%m.%d")
+    #         if end_date:
+    #             end_date = datetime.strptime(end_date, "%Y.%m.%d").strftime("%Y.%m.%d")
+    #     except ValueError:
+    #         self.status_name.set("请输入有效的日期格式（如 2021.01.01）")
+    #         return
+
+    #     # 检查输入的金额范围和日期范围是否合理
+    #     if min_money and max_money:
+    #         try:
+    #             min_money =Decimal(min_money)
+    #             max_money = Decimal(max_money)
+    #             if min_money > max_money:
+    #                 self.status_name.set("最小金额应小于最大金额")
+    #                 return
+    #         except ValueError:
+    #             self.status_name.set("请输入有效的金额范围")
+    #             return
+
+    #     if start_date and end_date and start_date > end_date:
+    #         self.status_name.set("开始日期应早于或等于结束日期")
+    #         return
+
+    #     # 调用数据库查询方法，根据综合条件搜索学生信息
+    #     students = mysql_student.search(
+    #         type_name=type_name if type_name else None,
+    #         type_value=type_value if type_value else None,
+    #         min_money=min_money if min_money else 0,
+    #         max_money=max_money if max_money else 99999999999999999,
+    #         start_date=start_date if start_date else min_date,
+    #         end_date=end_date if end_date else current_date
+    #     )
+
+       
+    #     total_money=0
+    #     # 如果没有找到匹配的学生信息，提示用户
+    #     if not students:
+    #         self.status_name.set("总金额:0")
+    #         return
+
+    #     # 将搜索结果显示在树形视图中
+    #     for stu in students:
+    #         # 使用索引访问 tuple 中的字段
+    #         id = stu[0] if len(stu) > 0 else 'N/A'
+    #         name = stu[1] if len(stu) > 1 else 'N/A'
+    #         type = stu[2] if len(stu) > 2 else 'N/A'
+    #         source = stu[3] if len(stu) > 3 else 'N/A'
+    #         money_in = stu[4] if len(stu) > 4 else 'N/A'
+    #         money_out=stu[5] if len(stu) > 5 else 'N/A'
+    #         date = stu[6] if len(stu) > 6 else 'N/A'
+
+    #         self.tree_view.insert('', 'end', values=(id, name, type, source, money_in,money_out, date))
+    #         # if money != 'N/A':
+    #         #     try:
+    #         #         total_money += decimal(money)  # 确保 money 是整数
+    #         #     except ValueError:
+    #         #         print(f"Warning: Invalid money value '{money}' for student {name}")
+    #           # 只要 money_in / money_out 是数字就累加它们的和
+    #         try:
+    #             money_in  = Decimal(money_in)  if str(money_in).strip()  else 0
+    #             money_out = Decimal(money_out) if str(money_out).strip() else 0
+    #             total_money += money_in + money_out
+    #         except ValueError:
+    #             print(f"Warning: Invalid money_in or money_out for student {name}")
+
+
+    #     # 设置树形视图的行背景颜色
+    #     self.tree_color()
+    #     self.status_name.set(f"总金额：{total_money}")
     def search(self):
-        # 清空树形视图中的所有内容
+        # 1. 清空表格
         for item in self.tree_view.get_children():
             self.tree_view.delete(item)
 
-        # 获取用户输入的查询条件
-        type_value = self.type_type.get()
-        min_money = self.min_money_entry.get()
-        max_money = self.max_money_entry.get()
-        start_date = self.start_date_entry.get()
-        end_date = self.end_date_entry.get()
+        # 2. 读取界面输入
+        mode       = self.select_entry.get()          # 0全部 1收入 -1支出
+        type_value = self.type_type.get().strip()
+        name_key   = self.name_entry.get().strip()
+        min_money  = self.min_money_entry.get().strip()
+        max_money  = self.max_money_entry.get().strip()
+        start_date = self.start_date_entry.get().strip()
+        end_date   = self.end_date_entry.get().strip()
 
-        # 格式化日期输入
+        # 3. 日期格式校验
         try:
-            if start_date:
-                start_date = datetime.strptime(start_date, "%Y.%m.%d").strftime("%Y.%m.%d")
-            if end_date:
-                end_date = datetime.strptime(end_date, "%Y.%m.%d").strftime("%Y.%m.%d")
+            start_date = datetime.strptime(start_date, "%Y.%m.%d").strftime("%Y.%m.%d") if start_date else None
+            end_date   = datetime.strptime(end_date,   "%Y.%m.%d").strftime("%Y.%m.%d") if end_date else None
         except ValueError:
-            self.status_name.set("请输入有效的日期格式（如 2021.01.01）")
+            self.status_name.set("日期格式错误（YYYY.MM.DD）")
             return
 
-        # 检查输入的金额范围和日期范围是否合理
-        if min_money and max_money:
-            try:
-                min_money =decimal(min_money)
-                max_money = decimal(max_money)
-                if min_money > max_money:
-                    self.status_name.set("最小金额应小于最大金额")
-                    return
-            except ValueError:
-                self.status_name.set("请输入有效的金额范围")
+        # 4. 金额范围校验
+        try:
+            min_money = Decimal(min_money) if min_money else Decimal('0')
+            max_money = Decimal(max_money) if max_money else Decimal('999999999')
+            if min_money > max_money:
+                self.status_name.set("最小金额应≤最大金额")
                 return
-
-        if start_date and end_date and start_date > end_date:
-            self.status_name.set("开始日期应早于或等于结束日期")
+        except:
+            self.status_name.set("金额必须为数字")
             return
 
-        # 调用数据库查询方法，根据综合条件搜索学生信息
+        # 5. 调用数据库查询
         students = mysql_student.search(
-            type_value=type_value if type_value else None,
-            min_money=min_money if min_money else allminmoney,
-            max_money=max_money if max_money else allmaxmoney,
-            start_date=start_date if start_date else min_date,
-            end_date=end_date if end_date else current_date
+            mode       = mode,
+            name_key   = name_key or None,
+            type_value = type_value or None,
+            min_money  = min_money,
+            max_money  = max_money,
+            start_date = start_date,
+            end_date   = end_date
         )
 
-       
-        total_money=0
-        # 如果没有找到匹配的学生信息，提示用户
+        # 6. 展示结果
+        total = Decimal('0')
         if not students:
-            self.status_name.set("总金额:0")
+            self.status_name.set("总金额：0")
             return
 
-        # 将搜索结果显示在树形视图中
         for stu in students:
-            # 使用索引访问 tuple 中的字段
-            id = stu[0] if len(stu) > 0 else 'N/A'
-            name = stu[1] if len(stu) > 1 else 'N/A'
-            type = stu[2] if len(stu) > 2 else 'N/A'
-            source = stu[3] if len(stu) > 3 else 'N/A'
-            money = stu[4] if len(stu) > 4 else 'N/A'
-            date = stu[5] if len(stu) > 5 else 'N/A'
+            id, name, type_, source, money_in, money_out, date = stu
+            money_sum = Decimal(money_in or 0) + Decimal(money_out or 0)
+            self.tree_view.insert('', 'end',
+                                values=(id, name, type_, source, money_in, money_out, date))
+            total += money_sum
 
-            self.tree_view.insert('', 'end', values=(id, name, type, source, money, date))
-            if money != 'N/A':
-                try:
-                    total_money += decimal(money)  # 确保 money 是整数
-                except ValueError:
-                    print(f"Warning: Invalid money value '{money}' for student {name}")
-
-
-        # 设置树形视图的行背景颜色
         self.tree_color()
-        self.status_name.set(f"总金额：{total_money}")
-        
+        self.status_name.set(f"总金额：{total}")
+            
     def treeviewClick(self):  # 单击
         for item in self.tree_view.selection():
              item_text = self.tree_view.item(item, "values")
@@ -347,7 +632,7 @@ class SearchFrame(Frame):
         # 获取当前树形视图中的所有数据
         items = self.tree_view.get_children()
         data = []
-        columns = ("id", "name", "type", "source", "money", "date")  # 与Treeview列名对应
+        columns = ("id", "name", "type", "source", "money_in","money_out", "date")  # 与Treeview列名对应
         
         for item in items:
             values = self.tree_view.item(item, 'values')
