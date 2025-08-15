@@ -248,7 +248,7 @@ import keyboard
 class MianPage:
     def __init__(self, master):
         self.root = master
-        self.root.title('学生信息管理系统')
+        self.root.title('郓城东盛纺织账目管理系统')
         # self.root.geometry('570x290')
         self.root.geometry('800x290')
         self.create_page()

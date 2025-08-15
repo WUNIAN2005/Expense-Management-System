@@ -1,5 +1,6 @@
 from tkinter import *
-import pymysql
+import pymysql 
+from datetime import datetime
 # 创建连接数据库student的对象conn
 conn = pymysql.connect(
     host='localhost',  # 数据库主机名
@@ -73,26 +74,14 @@ def all():
  
  
 data = [
-    (20, '徐寒研', 4, '软件开发4班', 68, '2024.01.01'),
-    (19, '荣浩博', 4, '软件开发4班', 56, '2024.01.02'),
-    (18, '刘德泽', 4, '软件开发4班', 78, '2024.01.03'),
-    (17, '陈涵梁', 4, '软件开发4班', 68, '2024.01.04'),
-    (16, '宋明玉', 4, '软件开发4班', 79, '2024.01.05'),
-    (15, '邓海洋', 4, '软件开发4班', 68, '2024.01.06'),
-    (14, '快乐男孩', 4, '软件开发4班', 79, '2024.01.07'),
-    (13, '周解青', 4, '软件开发4班', 69, '2024.01.08'),
-    (12, '帅哥', 4, '软件开发4班', 72, '2024.01.09'),
-    (11, '金十一', 3, '物联网3班', 84, '2024.01.10'),
-    (10, '郑十', 2, '物联网2班', 81, '2024.01.11'),
-    (9, '吴九', 1, '大数据1班', 92, '2024.01.12'),
-    (8, '周八', 3, '软件土木3班', 87, '2024.01.13'),
-    (7, '孙七', 1, '计算机1班', 64, '2024.01.14'),
-    (6, '赵六', 4, '软件开发4班', 48, '2024.01.15'),
-    (5, '王五', 2, '软件金融2班', 78, '2024.01.16'),
-    (4, '李四', 2, '软件会计2班', 80, '2024.01.17'),
-    (3, '张三', 5, '软件土木5班', 61, '2024.01.18'),
-    (2, '陈二', 5, '计算机5班', 81, '2024.01.19'),
-    (1, '刘一', 4, '软件开发4班', 60, '2024.01.20')
+    (1, "张三", 1, "奖学金", 2000.000000, 0.000000, "2024.08.01"),
+    (2, "李四", 2, "生活费", 0.000000, 1500.000000, "2024.08.02"),
+    (3, "王五", 1, "兼职收入", 3000.000000, 0.000000, "2024.08.03"),
+    (4, "赵六", 2, "学费支出", 0.000000, 5000.000000, "2024.08.04"),
+    (5, "孙七", 1, "奖学金", 4000.000000, 0.000000, "2024.08.05"),
+    (6, "周八", 2, "生活费", 0.000000, 2000.000000, "2024.08.06"),
+    (7, "吴九", 1, "兼职收入", 2500.000000, 0.000000, "2024.08.07"),
+    (8, "郑十", 2, "书本费支出", 0.000000, 1000.000000, "2024.08.08")
 ]
 # def insert(stu):
 #     cursor.execute("insert into students values('{0}', '{1}', '{2}','{3}', '{4}', '{5}', '{6}');".
@@ -323,19 +312,18 @@ def get_min_date():
 #     cursor.execute(query, params)
 #     result = cursor.fetchall()
 #     print("Debug: Database result =", result)
-#     return result
-@staticmethod
-def search(mode=0, name_key=None, type_value=None,
-           min_money=0, max_money=999999999,
-           start_date=None, end_date=None):
-    """
+    #     return result
+def search(mode=0, name_key=None, source_key=None,type_value=None,
+        min_money=0, max_money=999999999999999,
+        start_date=None, end_date=None):
+    """ 
     mode: 0全部 1收入 -1支出
     """
     sql = """
         SELECT id, name, type, source,
-               COALESCE(money_in, 0)  AS money_in,
-               COALESCE(money_out, 0) AS money_out,
-               date
+            COALESCE(money_in, 0)  AS money_in,
+            COALESCE(money_out, 0) AS money_out,
+            date
         FROM students
         WHERE 1=1
     """
@@ -350,6 +338,11 @@ def search(mode=0, name_key=None, type_value=None,
     if type_value:
         sql += " AND type = %s"
         params.append(type_value)
+
+    # 公司模糊
+    if source_key:
+        sql += " AND source LIKE %s"
+        params.append(f'%{source_key}%')
 
     # 收支模式
     if mode == 1:          # 只保留收入
@@ -381,17 +374,27 @@ def update_student(student_id, new_data):
         # 构造 SQL 更新语句
         sql = """
         UPDATE students
-        SET name = %s, type = %s, source = %s, money = %s, date = %s
+        SET name = %s, type = %s, source = %s, money_in = %s,money_out =%s, date = %s
         WHERE id = %s
         """
+        date_str = new_data[5]  # 假设日期是 new_data 的第 6 个元素
+        if date_str:
+            try:
+                # 将日期从 "YYYY.M.D" 格式转换为 "YYYY.MM.DD" 格式
+                date_obj = datetime.strptime(date_str, "%Y.%m.%d")
+                formatted_date = date_obj.strftime("%Y.%m.%d")
+                # 替换原始日期为格式化后的日期
+                new_data = new_data[:5] + (formatted_date,) + new_data[6:]
+            except ValueError:
+                return False, "日期格式错误，请使用 YYYY.MM.DD 格式"
         # 注意：new_data 的顺序需要与 SQL 中的字段顺序一致
         cursor.execute(sql, (*new_data, student_id))
         conn.commit()
 
         if cursor.rowcount > 0:
-            return True, "学生信息更新成功"
+            return True, "信息更新成功"
         else:
-            return False, "未找到指定的学生信息"
+            return False, "未找到指定信息"
     except Exception as e:
         return False, f"更新失败：{e}"
   
