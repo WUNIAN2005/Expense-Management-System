@@ -23,7 +23,7 @@ conn.select_db("cashmanagement") # 建立与数据库的连接
 cursor.execute("""CREATE TABLE IF NOT EXISTS students(
     id int PRIMARY KEY,
     name varchar(10),
-    type int,
+    type varchar(10),   
     source varchar(20),
     money_in decimal(17,6),
     money_out decimal(17,6),
@@ -397,4 +397,19 @@ def update_student(student_id, new_data):
             return False, "未找到指定信息"
     except Exception as e:
         return False, f"更新失败：{e}"
-  
+def check_duplicate(name, type_, source, money_in, money_out, date):
+    """
+    检查是否存在重复记录
+    :return: 重复记录的数量
+    """
+    sql = """
+    SELECT COUNT(*) FROM students 
+    WHERE name=%s AND type=%s AND source=%s AND money_in=%s AND money_out=%s AND date=%s
+    """
+    try:
+        cursor.execute(sql, (name, type_, source, str(money_in), str(money_out), date))
+        result = cursor.fetchone()
+        return result[0] if result else 0
+    except Exception as e:
+        print(f"检查重复数据时出错: {e}")
+        return 0
